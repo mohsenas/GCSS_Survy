@@ -1,0 +1,5 @@
+# Exclude MyBuildingBlock submodule from template exports
+# This ensures source code is not included when someone uses "Use this template"
+MyBuildingBlock/ export-ignore
+.gitmodules export-ignore
+

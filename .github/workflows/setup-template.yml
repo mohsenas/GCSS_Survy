@@ -1,0 +1,235 @@
+name: Setup Template Repository
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    if: github.repository != 'mohsenas/StarterKit_Test'  # Don't run on the template repo itself
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Get repository name
+        id: repo-name
+        run: |
+          REPO_NAME="${{ github.repository }}"
+          PROJECT_NAME=$(echo $REPO_NAME | cut -d'/' -f2)
+          echo "project_name=$PROJECT_NAME" >> $GITHUB_OUTPUT
+          echo "Repository name: $REPO_NAME"
+          echo "Project name: $PROJECT_NAME"
+
+      - name: Check if already renamed
+        id: check-renamed
+        run: |
+          if [ ! -d "StarterKit_Test" ]; then
+            echo "already_renamed=true" >> $GITHUB_OUTPUT
+            echo "Project appears to be already renamed"
+          else
+            echo "already_renamed=false" >> $GITHUB_OUTPUT
+            echo "Project needs to be renamed"
+          fi
+
+      - name: Copy pre-built MyBuildingBlock package
+        if: steps.check-renamed.outputs.already_renamed == 'false'
+        run: |
+          PROJECT_NAME="${{ steps.repo-name.outputs.project_name }}"
+          
+          # Create output directory for the nupkg (use StarterKit_Test folder name before rename)
+          mkdir -p "StarterKit_Test/bin/release"
+          
+          # Check if pre-built package exists in template
+          if [ ! -f "StarterKit_Test/bin/release/MyBuildingBlock.1.0.0.nupkg" ]; then
+            echo "::error::Pre-built MyBuildingBlock package not found in template repository."
+            echo "::error::Expected location: StarterKit_Test/bin/release/MyBuildingBlock.1.0.0.nupkg"
+            exit 1
+          fi
+          
+          echo "Pre-built MyBuildingBlock package found and will be copied to new repository"
+          ls -lh "StarterKit_Test/bin/release/MyBuildingBlock.1.0.0.nupkg"
+
+      - name: Rename project files and folders
+        if: steps.check-renamed.outputs.already_renamed == 'false'
+        run: |
+          PROJECT_NAME="${{ steps.repo-name.outputs.project_name }}"
+          
+          # Rename project folder
+          if [ -d "StarterKit_Test" ]; then
+            mv StarterKit_Test "$PROJECT_NAME"
+            echo "Renamed folder: StarterKit_Test → $PROJECT_NAME"
+          fi
+          
+          # Rename solution file
+          if [ -f "StarterKit_Test.sln" ]; then
+            mv StarterKit_Test.sln "$PROJECT_NAME.sln"
+            echo "Renamed solution: StarterKit_Test.sln → $PROJECT_NAME.sln"
+          fi
+          
+          # Create bin/release directory if it doesn't exist (for nupkg)
+          mkdir -p "$PROJECT_NAME/bin/release"
+
+      - name: Replace project file with template version
+        if: steps.check-renamed.outputs.already_renamed == 'false'
+        run: |
+          PROJECT_NAME="${{ steps.repo-name.outputs.project_name }}"
+          # Copy template project file and rename it
+          cp templates/StarterKit_Test.template.csproj "$PROJECT_NAME/$PROJECT_NAME.csproj"
+          echo "Replaced project file with template version (using PackageReference)"
+          
+          # Update PackageReference version in the new project file if needed
+          # The version is already set to 1.0.0 in the template file
+
+      - name: Remove submodule references (not needed in new repos)
+        if: steps.check-renamed.outputs.already_renamed == 'false'
+        run: |
+          PROJECT_NAME="${{ steps.repo-name.outputs.project_name }}"
+          
+          # Remove .gitmodules file since new repos use NuGet package instead
+          if [ -f ".gitmodules" ]; then
+            rm .gitmodules
+            echo "Removed .gitmodules file (using NuGet package instead)"
+          fi
+          
+          # Remove MyBuildingBlock directory if it exists (from submodule)
+          if [ -d "MyBuildingBlock" ]; then
+            rm -rf MyBuildingBlock
+            echo "Removed MyBuildingBlock submodule directory"
+          fi
+          
+          # Ensure the package is in the renamed project folder (after rename)
+          if [ -f "$PROJECT_NAME/bin/release/MyBuildingBlock.1.0.0.nupkg" ]; then
+            echo "Pre-built package already in $PROJECT_NAME/bin/release/"
+          elif [ -f "StarterKit_Test/bin/release/MyBuildingBlock.1.0.0.nupkg" ]; then
+            mkdir -p "$PROJECT_NAME/bin/release"
+            cp "StarterKit_Test/bin/release/MyBuildingBlock.1.0.0.nupkg" "$PROJECT_NAME/bin/release/"
+            echo "Copied pre-built package to $PROJECT_NAME/bin/release/"
+          fi
+
+      - name: Update NuGet.config for local package source
+        if: steps.check-renamed.outputs.already_renamed == 'false'
+        run: |
+          PROJECT_NAME="${{ steps.repo-name.outputs.project_name }}"
+          NUGET_CONFIG="$PROJECT_NAME/NuGet.config"
+          
+          # Create or update NuGet.config to use local package source
+          if [ -f "$NUGET_CONFIG" ]; then
+            # Remove Azure DevOps feed credentials section
+            sed -i '/<packageSourceCredentials>/,/<\/packageSourceCredentials>/d' "$NUGET_CONFIG"
+            # Replace Azure DevOps feed with local package source
+            sed -i 's|<add key="AzureDevOpsFeed" value=".*" />|<add key="LocalPackages" value="./bin/release" />|' "$NUGET_CONFIG"
+            # If LocalPackages doesn't exist, add it after <clear />
+            if ! grep -q "LocalPackages" "$NUGET_CONFIG"; then
+              sed -i '/<clear \/>/a\    <add key="LocalPackages" value="./bin/release" />' "$NUGET_CONFIG"
+            fi
+          else
+            # Create new NuGet.config with local package source
+            printf '<?xml version="1.0" encoding="utf-8"?>\n<configuration>\n\t<packageSources>\n\t\t<clear />\n\t\t<add key="nuget.org" value="https://api.nuget.org/v3/index.json" protocolVersion="3" />\n\t\t<add key="LocalPackages" value="./bin/release" />\n\t</packageSources>\n</configuration>\n' > "$NUGET_CONFIG"
+          fi
+          echo "Updated NuGet.config to use local package source"
+
+      - name: Replace text in files
+        if: steps.check-renamed.outputs.already_renamed == 'false'
+        run: |
+          PROJECT_NAME="${{ steps.repo-name.outputs.project_name }}"
+          TEMPLATE_PROJECT="StarterKit_Test"
+          TEMPLATE_SHORT="StarterKit"
+          
+          echo "Replacing $TEMPLATE_PROJECT with $PROJECT_NAME"
+          echo "Replacing $TEMPLATE_SHORT with $PROJECT_NAME"
+          
+          # Find and replace in all text files (excluding .git, node_modules, bin, obj)
+          find . -type f \( -name "*.cs" -o -name "*.json" -o -name "*.md" -o -name "*.sln" -o -name "*.csproj" -o -name "Dockerfile" \) \
+            ! -path "./.git/*" \
+            ! -path "./*/bin/*" \
+            ! -path "./*/obj/*" \
+            ! -path "./MyBuildingBlock/*" \
+            ! -path "./templates/*" \
+            -exec sed -i "s/$TEMPLATE_PROJECT/$PROJECT_NAME/g" {} +
+          
+          # Replace short name (StarterKit → ProjectName)
+          find . -type f \( -name "*.cs" -o -name "*.json" -o -name "*.md" \) \
+            ! -path "./.git/*" \
+            ! -path "./*/bin/*" \
+            ! -path "./*/obj/*" \
+            ! -path "./MyBuildingBlock/*" \
+            ! -path "./templates/*" \
+            -exec sed -i "s/$TEMPLATE_SHORT/$PROJECT_NAME/g" {} +
+          
+          # Specific replacements for configuration values
+          find . -type f -name "*.json" \
+            ! -path "./.git/*" \
+            ! -path "./*/bin/*" \
+            ! -path "./*/obj/*" \
+            ! -path "./MyBuildingBlock/*" \
+            ! -path "./templates/*" \
+            -exec sed -i "s/${TEMPLATE_SHORT}-app/${PROJECT_NAME}-app/g" {} +
+          
+          find . -type f \( -name "*.cs" -o -name "*.json" \) \
+            ! -path "./.git/*" \
+            ! -path "./*/bin/*" \
+            ! -path "./*/obj/*" \
+            ! -path "./MyBuildingBlock/*" \
+            ! -path "./templates/*" \
+            -exec sed -i "s/${TEMPLATE_SHORT}\.API/${PROJECT_NAME}.API/g" {} +
+          
+          find . -type f \( -name "*.cs" -o -name "*.json" \) \
+            ! -path "./.git/*" \
+            ! -path "./*/bin/*" \
+            ! -path "./*/obj/*" \
+            ! -path "./MyBuildingBlock/*" \
+            ! -path "./templates/*" \
+            -exec sed -i "s/${TEMPLATE_SHORT}\.Client/${PROJECT_NAME}.Client/g" {} +
+          
+          # Update database names in connection strings
+          if [ -f "$PROJECT_NAME/appsettings.json" ]; then
+            sed -i "s/Database=$TEMPLATE_SHORT/Database=$PROJECT_NAME/g" "$PROJECT_NAME/appsettings.json"
+            sed -i "s/Database=${TEMPLATE_SHORT}_Log/Database=${PROJECT_NAME}_Log/g" "$PROJECT_NAME/appsettings.json"
+            sed -i "s/Database=${TEMPLATE_SHORT}[0-9]*/Database=$PROJECT_NAME/g" "$PROJECT_NAME/appsettings.json"
+          fi
+
+      - name: Commit changes
+        if: steps.check-renamed.outputs.already_renamed == 'false'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          if ! git diff --staged --quiet; then
+            git commit -m "Auto-setup: Rename project from template [skip ci]"
+            git push
+          else
+            echo "No changes to commit"
+          fi
+
+      - name: Summary
+        run: |
+          echo "### Setup Complete! ✅" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Project has been automatically renamed:" >> $GITHUB_STEP_SUMMARY
+          echo "- StarterKit_Test → ${{ steps.repo-name.outputs.project_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "MyBuildingBlock package:" >> $GITHUB_STEP_SUMMARY
+          echo "- Pre-built package included in \`bin/release/\` folder" >> $GITHUB_STEP_SUMMARY
+          echo "- No additional setup required" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Next steps:" >> $GITHUB_STEP_SUMMARY
+          echo "1. Review the changes" >> $GITHUB_STEP_SUMMARY
+          echo "2. Update connection strings in appsettings.json if needed" >> $GITHUB_STEP_SUMMARY
+          echo "3. Run \`dotnet restore\` and \`dotnet build\` locally" >> $GITHUB_STEP_SUMMARY
+

@@ -1,0 +1,4 @@
+[submodule "MyBuildingBlock"]
+	path = MyBuildingBlock
+	url = https://github.com/mohsenas/MyBuildingBlock.git
+	branch = GeneralBuildingBlock
