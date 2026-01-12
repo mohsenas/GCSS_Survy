@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.34928.147
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GCSS_Survy", "GCSS_Survy\GCSS_Survy.csproj", "{376DD84A-1491-41DE-86B5-9C096C260A7F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyBuildingBlock", "..\GCSS\MyBuildingBlock\MyBuildingBlock\MyBuildingBlock.csproj", "{7C86E0C3-B81B-44E0-B3A9-17A1E811C9D4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{376DD84A-1491-41DE-86B5-9C096C260A7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{376DD84A-1491-41DE-86B5-9C096C260A7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{376DD84A-1491-41DE-86B5-9C096C260A7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{376DD84A-1491-41DE-86B5-9C096C260A7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C86E0C3-B81B-44E0-B3A9-17A1E811C9D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C86E0C3-B81B-44E0-B3A9-17A1E811C9D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C86E0C3-B81B-44E0-B3A9-17A1E811C9D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C86E0C3-B81B-44E0-B3A9-17A1E811C9D4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {88D746A4-B26E-4FEF-826D-8C82743CC23C}
+	EndGlobalSection
+EndGlobal

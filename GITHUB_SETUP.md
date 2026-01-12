@@ -10,7 +10,7 @@ Your local Git repository has been initialized and your initial commit is ready.
 2. Click the **+** icon in the top right corner
 3. Select **New repository**
 4. Fill in the details:
-   - **Repository name**: `StarterKit_Test` (or your preferred name)
+   - **Repository name**: `GCSS_Survy` (or your preferred name)
    - **Description**: "A .NET 8.0 Web API project with authentication"
    - **Visibility**: Choose Public or Private
    - **DO NOT** initialize with README, .gitignore, or license (we already have these)
@@ -19,7 +19,7 @@ Your local Git repository has been initialized and your initial commit is ready.
 ### Option B: Using GitHub CLI (if installed)
 
 ```bash
-gh repo create StarterKit_Test --public --source=. --remote=origin --push
+gh repo create GCSS_Survy --public --source=. --remote=origin --push
 ```
 
 ## Step 2: Add Remote and Push
@@ -28,7 +28,7 @@ After creating the repository on GitHub, you'll see instructions. Use these comm
 
 ```bash
 # Add the remote repository (replace YOUR_USERNAME with your GitHub username)
-git remote add origin https://github.com/YOUR_USERNAME/StarterKit_Test.git
+git remote add origin https://github.com/YOUR_USERNAME/GCSS_Survy.git
 
 # Rename the default branch to main (if needed)
 git branch -M main
@@ -40,7 +40,7 @@ git push -u origin main
 ### If you're using SSH:
 
 ```bash
-git remote add origin git@github.com:YOUR_USERNAME/StarterKit_Test.git
+git remote add origin git@github.com:YOUR_USERNAME/GCSS_Survy.git
 git branch -M main
 git push -u origin main
 ```
@@ -71,7 +71,7 @@ This project uses MyBuildingBlock as a NuGet package (not a submodule). The pre-
 **For cloning this template repository (developers only):**
 ```bash
 # Clone with submodules (only for template repository development)
-git clone --recurse-submodules https://github.com/mohsenas/StarterKit_Test.git
+git clone --recurse-submodules https://github.com/mohsenas/GCSS_Survy.git
 
 # Or if already cloned, initialize submodules
 git submodule update --init --recursive

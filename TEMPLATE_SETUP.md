@@ -74,14 +74,14 @@ pwsh setup-project.ps1 -ProjectName "YourProjectName"
 
 The GitHub Actions workflow (or manual script) automatically updates:
 
-- ✅ **Namespaces**: `StarterKit_Test` → `YourProjectName`
-- ✅ **Project folder**: `StarterKit_Test/` → `YourProjectName/`
-- ✅ **Solution file**: `StarterKit_Test.sln` → `YourProjectName.sln`
-- ✅ **Project file**: `StarterKit_Test.csproj` → `YourProjectName.csproj`
-- ✅ **API routes**: `api/StarterKit` → `api/YourProjectName`
-- ✅ **Application name**: `StarterKit-app` → `YourProjectName-app`
-- ✅ **JWT settings**: `StarterKit.API` → `YourProjectName.API`
-- ✅ **Database names**: `StarterKit` → `YourProjectName` (in connection strings)
+- ✅ **Namespaces**: `GCSS_Survy` → `YourProjectName`
+- ✅ **Project folder**: `GCSS_Survy/` → `YourProjectName/`
+- ✅ **Solution file**: `GCSS_Survy.sln` → `YourProjectName.sln`
+- ✅ **Project file**: `GCSS_Survy.csproj` → `YourProjectName.csproj`
+- ✅ **API routes**: `api/GCSS_Survy` → `api/YourProjectName`
+- ✅ **Application name**: `GCSS_Survy-app` → `YourProjectName-app`
+- ✅ **JWT settings**: `GCSS_Survy.API` → `YourProjectName.API`
+- ✅ **Database names**: `GCSS_Survy` → `YourProjectName` (in connection strings)
 - ✅ **Configuration values**: All references in `appsettings.json`, `Program.cs`, `Constants.cs`
 - ✅ **Dockerfile**: Folder and assembly references
 
@@ -196,7 +196,7 @@ This means your endpoints will be:
 
 **Error: "Template project folder not found"**
 - Make sure you're running the script from the repository root
-- The script expects to find the `StarterKit_Test` folder (before renaming)
+- The script expects to find the `GCSS_Survy` folder (before renaming)
 
 **Error: "Project name can only contain..."**
 - Use only letters, numbers, underscores, and hyphens
@@ -231,7 +231,7 @@ This means your endpoints will be:
 ## Need Help?
 
 - Check the main [README.md](README.md) for project documentation
-- Review [DEBUG_LOGIN.md](StarterKit_Test/DEBUG_LOGIN.md) for authentication troubleshooting
+- Review [DEBUG_LOGIN.md](GCSS_Survy/DEBUG_LOGIN.md) for authentication troubleshooting
 - MyBuildingBlock is included as a NuGet package - no separate setup needed
 
 ## Contributing Back

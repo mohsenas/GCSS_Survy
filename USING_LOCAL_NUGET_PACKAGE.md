@@ -118,7 +118,7 @@ In this template, the setup is already configured:
 
 ### Package Location
 ```
-StarterKit_Test/bin/release/MyBuildingBlock.1.0.0.nupkg
+GCSS_Survy/bin/release/MyBuildingBlock.1.0.0.nupkg
 ```
 
 ## Troubleshooting

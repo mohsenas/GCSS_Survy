@@ -4,7 +4,7 @@ This guide explains how to create and update the MyBuildingBlock NuGet package t
 
 ## Overview
 
-The MyBuildingBlock package is pre-built and stored in `StarterKit_Test/bin/release/MyBuildingBlock.1.0.0.nupkg`. This package is committed to the template repository so that new repositories created from the template don't need to build it themselves.
+The MyBuildingBlock package is pre-built and stored in `GCSS_Survy/bin/release/MyBuildingBlock.1.0.0.nupkg`. This package is committed to the template repository so that new repositories created from the template don't need to build it themselves.
 
 ## Prerequisites
 
@@ -31,12 +31,12 @@ This compiles the project in Release mode. You'll see warnings, but the build sh
 ### 3. Create the NuGet Package
 
 ```bash
-dotnet pack -c Release -o ../../StarterKit_Test/bin/release -p:Version=1.0.0 --no-build
+dotnet pack -c Release -o ../../GCSS_Survy/bin/release -p:Version=1.0.0 --no-build
 ```
 
 **Parameters explained:**
 - `-c Release`: Use Release configuration
-- `-o ../../StarterKit_Test/bin/release`: Output directory (relative to MyBuildingBlock/MyBuildingBlock)
+- `-o ../../GCSS_Survy/bin/release`: Output directory (relative to MyBuildingBlock/MyBuildingBlock)
 - `-p:Version=1.0.0`: Set package version to 1.0.0
 - `--no-build`: Skip build (since we already built in step 2)
 
@@ -44,7 +44,7 @@ dotnet pack -c Release -o ../../StarterKit_Test/bin/release -p:Version=1.0.0 --n
 
 ```bash
 # From repository root
-ls -lh StarterKit_Test/bin/release/MyBuildingBlock.1.0.0.nupkg
+ls -lh GCSS_Survy/bin/release/MyBuildingBlock.1.0.0.nupkg
 ```
 
 You should see the package file (approximately 238 KB).
@@ -54,7 +54,7 @@ You should see the package file (approximately 238 KB).
 The `.gitignore` file has exceptions to track this specific package:
 
 ```bash
-git add -f StarterKit_Test/bin/release/MyBuildingBlock.1.0.0.nupkg
+git add -f GCSS_Survy/bin/release/MyBuildingBlock.1.0.0.nupkg
 ```
 
 The `-f` flag forces git to add the file even though `bin/` and `*.nupkg` are normally ignored.
@@ -74,11 +74,11 @@ From the repository root, you can run all steps at once:
 # Build and package
 cd MyBuildingBlock/MyBuildingBlock
 dotnet build -c Release
-dotnet pack -c Release -o ../../StarterKit_Test/bin/release -p:Version=1.0.0 --no-build
+dotnet pack -c Release -o ../../GCSS_Survy/bin/release -p:Version=1.0.0 --no-build
 cd ../../
 
 # Verify and add to git
-git add -f StarterKit_Test/bin/release/MyBuildingBlock.1.0.0.nupkg
+git add -f GCSS_Survy/bin/release/MyBuildingBlock.1.0.0.nupkg
 git status  # Verify it's staged
 ```
 
@@ -88,19 +88,19 @@ If you need to change the version (e.g., to 1.0.1):
 
 1. Update the version in the pack command:
    ```bash
-   dotnet pack -c Release -o ../../StarterKit_Test/bin/release -p:Version=1.0.1 --no-build
+   dotnet pack -c Release -o ../../GCSS_Survy/bin/release -p:Version=1.0.1 --no-build
    ```
 
 2. Update the template project file:
-   - Edit `templates/StarterKit_Test.template.csproj`
+   - Edit `templates/GCSS_Survy.template.csproj`
    - Change `<PackageReference Include="MyBuildingBlock" Version="1.0.0" />` to `Version="1.0.1"`
 
 3. Update the workflow if needed (currently hardcoded to check for 1.0.0)
 
 4. Remove the old package and add the new one:
    ```bash
-   git rm StarterKit_Test/bin/release/MyBuildingBlock.1.0.0.nupkg
-   git add -f StarterKit_Test/bin/release/MyBuildingBlock.1.0.1.nupkg
+   git rm GCSS_Survy/bin/release/MyBuildingBlock.1.0.0.nupkg
+   git add -f GCSS_Survy/bin/release/MyBuildingBlock.1.0.1.nupkg
    ```
 
 ## Troubleshooting
@@ -108,8 +108,8 @@ If you need to change the version (e.g., to 1.0.1):
 ### Package Not Found Error
 
 If the workflow fails with "Pre-built MyBuildingBlock package not found":
-- Verify the package exists: `ls StarterKit_Test/bin/release/MyBuildingBlock.1.0.0.nupkg`
-- Check the file is committed: `git ls-files StarterKit_Test/bin/release/`
+- Verify the package exists: `ls GCSS_Survy/bin/release/MyBuildingBlock.1.0.0.nupkg`
+- Check the file is committed: `git ls-files GCSS_Survy/bin/release/`
 - Ensure `.gitignore` has the exception rules
 
 ### Package Not Tracked by Git
@@ -117,7 +117,7 @@ If the workflow fails with "Pre-built MyBuildingBlock package not found":
 If `git add` doesn't work:
 - Use `git add -f` to force add the file
 - Verify `.gitignore` has the exception: `!**/bin/release/MyBuildingBlock.*.nupkg`
-- Check git status: `git status StarterKit_Test/bin/release/MyBuildingBlock.1.0.0.nupkg`
+- Check git status: `git status GCSS_Survy/bin/release/MyBuildingBlock.1.0.0.nupkg`
 
 ### Build Errors
 
@@ -134,9 +134,9 @@ You could create a PowerShell script to automate this:
 # build-package.ps1
 Set-Location MyBuildingBlock/MyBuildingBlock
 dotnet build -c Release
-dotnet pack -c Release -o ../../StarterKit_Test/bin/release -p:Version=1.0.0 --no-build
+dotnet pack -c Release -o ../../GCSS_Survy/bin/release -p:Version=1.0.0 --no-build
 Set-Location ../../
-git add -f StarterKit_Test/bin/release/MyBuildingBlock.1.0.0.nupkg
+git add -f GCSS_Survy/bin/release/MyBuildingBlock.1.0.0.nupkg
 Write-Host "Package built and staged. Run 'git commit' to commit it."
 ```
 

@@ -1,4 +1,4 @@
-# StarterKit Test
+# GCSS_Survy Test
 
 > **📋 This is a Private GitHub Template Repository**  
 > Use this template to create new .NET 8.0 Web API projects. Setup happens **automatically** via GitHub Actions - just create a repository from this template and everything is renamed for you!  
@@ -49,8 +49,8 @@ If you're working on the template repository itself:
 ### 1. Clone the Repository
 
 ```bash
-git clone --recurse-submodules https://github.com/mohsenas/StarterKit_Test.git
-cd StarterKit_Test
+git clone --recurse-submodules https://github.com/mohsenas/GCSS_Survy.git
+cd GCSS_Survy
 ```
 
 ### 2. Configure Database
@@ -60,7 +60,7 @@ Update the connection string in `appsettings.json`:
 ```json
 {
   "ConnectionStrings": {
-    "DefaultConnectionString": "Server=.;Database=StarterKit;Trusted_Connection=True;TrustServerCertificate=True;"
+    "DefaultConnectionString": "Server=.;Database=GCSS_Survy;Trusted_Connection=True;TrustServerCertificate=True;"
   }
 }
 ```
@@ -68,7 +68,7 @@ Update the connection string in `appsettings.json`:
 ### 3. Run Database Migrations
 
 ```bash
-cd StarterKit_Test
+cd GCSS_Survy
 dotnet ef database update
 ```
 
@@ -87,9 +87,9 @@ The API will be available at:
 
 ### Authentication
 
-- `POST /api/StarterKit/SecureAuth/v1/login` - User login
-- `POST /api/StarterKit/SecureAuth/v1/refresh` - Refresh access token
-- `POST /api/StarterKit/SecureAuth/v1/logout` - User logout
+- `POST /api/GCSS_Survy/SecureAuth/v1/login` - User login
+- `POST /api/GCSS_Survy/SecureAuth/v1/refresh` - Refresh access token
+- `POST /api/GCSS_Survy/SecureAuth/v1/logout` - User logout
 
 ### Health Check
 
@@ -105,7 +105,7 @@ The application seeds a default admin user:
 ## Project Structure
 
 ```
-StarterKit_Test/
+GCSS_Survy/
 ├── Data/
 │   ├── ApplicationDbContext.cs    # Database context
 │   └── DataSeeder.cs              # Database seeding
@@ -148,7 +148,7 @@ Key configuration sections in `appsettings.json`:
 - MyBuildingBlock exists as a Git submodule for development
 - When cloning the template repository itself:
   ```bash
-  git clone --recurse-submodules https://github.com/mohsenas/StarterKit_Test.git
+  git clone --recurse-submodules https://github.com/mohsenas/GCSS_Survy.git
   git submodule update --init --recursive
   ```
 - Submodule is excluded from template exports (via `.gitattributes`)

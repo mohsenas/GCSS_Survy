@@ -11,21 +11,21 @@ Since the setup script performs destructive operations (renames folders and file
 1. **Create a test copy of the repository:**
    ```bash
    # Create a copy of the entire repository
-   cp -r StarterKit_Test StarterKit_Test_Backup
+   cp -r GCSS_Survy GCSS_Survy_Backup
    # Or on Windows
-   xcopy StarterKit_Test StarterKit_Test_Backup /E /I
+   xcopy GCSS_Survy GCSS_Survy_Backup /E /I
    ```
 
 2. **Run the script with a test project name:**
    ```powershell
-   cd StarterKit_Test
+   cd GCSS_Survy
    .\setup-project.ps1 -ProjectName "TestProject"
    ```
 
 3. **Verify the changes:**
-   - Check that the folder `StarterKit_Test/` was renamed to `TestProject/`
-   - Check that `StarterKit_Test.sln` was renamed to `TestProject.sln`
-   - Check that `TestProject/TestProject.csproj` exists (renamed from StarterKit_Test.csproj)
+   - Check that the folder `GCSS_Survy/` was renamed to `TestProject/`
+   - Check that `GCSS_Survy.sln` was renamed to `TestProject.sln`
+   - Check that `TestProject/TestProject.csproj` exists (renamed from GCSS_Survy.csproj)
    - Verify namespaces in C# files are updated
    - Verify configuration values in appsettings.json are updated
    - Verify API routes in Constants.cs are updated
@@ -39,10 +39,10 @@ Since the setup script performs destructive operations (renames folders and file
 
 5. **Check for any missed replacements:**
    ```bash
-   # Search for any remaining references to StarterKit_Test
-   grep -r "StarterKit_Test" TestProject/
-   # Search for any remaining references to StarterKit (in code/config)
-   grep -r "StarterKit" TestProject/ --exclude-dir=MyBuildingBlock
+   # Search for any remaining references to GCSS_Survy
+   grep -r "GCSS_Survy" TestProject/
+   # Search for any remaining references to GCSS_Survy (in code/config)
+   grep -r "GCSS_Survy" TestProject/ --exclude-dir=MyBuildingBlock
    ```
 
 ### What to Verify
