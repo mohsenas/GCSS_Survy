@@ -21,7 +21,7 @@ namespace GCSS_Survy.Services.Security
     //[ApiExplorerSettings(IgnoreApi = true)]
     //[BasePermission(true)]
 
-    public class SecureAuthController : BaseAuthenticationController<Users, Branches, Sessions,ApplicationDbContext>
+    public class SecureAuthController : BaseAuthenticationController<Users, Branches, Sessions>
     {
         //private readonly ITokenService _tokenService;
         //private readonly ISecurityService _securityService;
@@ -30,14 +30,14 @@ namespace GCSS_Survy.Services.Security
 
         public SecureAuthController(
             ApplicationDbContext context,
-            ILogger<BaseAuthenticationController<Users, Branches, Sessions,ApplicationDbContext>> logger,
+            ILogger<BaseAuthenticationController<Users, Branches, Sessions>> logger,
             IMapper mapper,
             IMediator mediator,
             ITokenService tokenService,
             ISecurityService securityService,
             IAuthenticationService<Users, Branches, Sessions> authService, IConfiguration configuration
             ,IServiceProvider serviceProvider)
-            : base(tokenService, securityService, authService, logger,context,serviceProvider)
+            : base(tokenService, securityService, authService, logger)
         {
             //_tokenService = tokenService;
             //_securityService = securityService;

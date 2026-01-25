@@ -8,7 +8,7 @@ namespace GCSS_Survy.Services.Emp_SimpleInfo.Models
     [DocCode(nameof(Emp_Simples))]
     [Lookup(nameof(EmpName), nameof(Job))]
 
-    public record Emp_Simples : ParentEntity<int>,IHasCustomFields, IsSoftDelete
+    public record Emp_Simples : ParentEntity<int>,IHasCustomFields
     {
         [Search(1)]
         [MaxLength(100)]
